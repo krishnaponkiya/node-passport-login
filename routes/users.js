@@ -5,6 +5,7 @@ const passport = require('passport');
 
 // Load User model
 const User = require('../models/User');
+const { route } = require(".");
 
 // Register
 router.post('/register', (req, res) => {
@@ -57,11 +58,18 @@ router.post('/register', (req, res) => {
 //Login 
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', {
-    successRedirect: '/dashboard',
-    failureRedirect: '/users/login',
+    successRedirect: '/users/dashboard',
+    failureRedirect: '/users/failed',
     failureFlash: true
   })(req, res, next);
 });
 
+router.get("/dashboard", (req, res) => {
+  res.send({ message: "You Have Successfully Logged In", code : 200});
+});
+
+router.get("/failed", (req, res) => {
+  res.status(500).json({ error: "Username or Password Incorrect" });
+});
 
 module.exports = router;
